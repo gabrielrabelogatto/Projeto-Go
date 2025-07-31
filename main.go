@@ -17,7 +17,10 @@ type Usuarios struct {
 }
 
 func main() {
-	connStr := "host=containers-us-west-54.railway.app user=postgres password=Gabriel123@07 dbname=Gabriel port=5432 sslmode=require"
+	connStr := os.Getenv("DATABASE_URL")
+	if connStr == "" {
+		log.Fatal("Variável DATABASE_URL não definida")
+	}
 	db, err := sql.Open("postgres", connStr)
 	defer db.Close()
 
