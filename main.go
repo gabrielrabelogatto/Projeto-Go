@@ -17,11 +17,8 @@ type Usuarios struct {
 }
 
 func main() {
-	connString := os.Getenv("DATABASE_URL")
-	db, err := sql.Open("postgres", connString)
-	if err != nil {
-	    log.Fatal("Erro ao iniciar conexão com o Postgres:", err)
-	}
+	connStr := "host=containers-us-west-54.railway.app user=postgres password=Gabriel123@07 dbname=Gabriel port=5432 sslmode=require"
+	db, err := sql.Open("postgres", connStr)
 	defer db.Close()
 
 	err = db.Ping()
