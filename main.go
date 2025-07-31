@@ -17,17 +17,10 @@ type Usuarios struct {
 }
 
 func main() {
-	connString := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=require",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_PORT"),
-	)
-
+	connString := os.Getenv("DATABASE_URL")
 	db, err := sql.Open("postgres", connString)
 	if err != nil {
-		log.Fatal("erro ao iniciar a conexão com o postgres: ", err)
+	    log.Fatal("Erro ao iniciar conexão com o Postgres:", err)
 	}
 	defer db.Close()
 
