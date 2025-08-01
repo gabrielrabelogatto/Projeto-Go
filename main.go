@@ -17,10 +17,8 @@ type Usuarios struct {
 }
 
 func main() {
-	connStr := os.Getenv("DATABASE_URL")
-	if connStr == "" {
-		log.Fatal("Variável DATABASE_URL não definida")
-	}
+	connStr := "postgres://postgres:Gabriel123%4007@switchback.proxy.rlwy.net:29771/Gabriel?sslmode=require"
+	
 	db, err := sql.Open("postgres", connStr)
 	defer db.Close()
 
