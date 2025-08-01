@@ -18,16 +18,20 @@ type Usuarios struct {
 
 func main() {
 	connStr := "postgres://postgres:Gabriel123%4007@switchback.proxy.rlwy.net:29771/Gabriel?sslmode=require"
-	
+
+	fmt.Println("Abrindo conexão com o banco...")
 	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatal("Erro ao abrir conexão com o banco: ", err)
+	}
 	defer db.Close()
 
+	fmt.Println("Conexão aberta. Fazendo ping...")
 	err = db.Ping()
 	if err != nil {
-		log.Fatal("erro no ping: ", err)
+		log.Fatal("Erro no ping: ", err)
 	}
-
-	fmt.Println("conectado ao banco de dados")
+	fmt.Println("Ping OK, conectado ao banco de dados")
 
 	app := fiber.New()
 
@@ -40,14 +44,14 @@ func main() {
 	app.Post("/enviarUsers", func(c *fiber.Ctx) error {
 		var usuarios Usuarios
 		if err := c.BodyParser(&usuarios); err != nil {
-			fmt.Println("erro ao enviar o json: ", err)
+			fmt.Println("Erro ao enviar o JSON: ", err)
 			return c.Status(400).JSON(fiber.Map{"erro": "JSON inválido"})
 		}
 
 		query := `INSERT INTO usuarios (nome, score) VALUES ($1, $2)`
 		_, err := db.Exec(query, usuarios.Nome, usuarios.Score)
 		if err != nil {
-			log.Println("erro ao tentar adicionar ao banco de dados:", err)
+			log.Println("Erro ao tentar adicionar ao banco de dados:", err)
 			return c.Status(500).JSON(fiber.Map{"erro": "Erro ao inserir"})
 		}
 
@@ -86,5 +90,6 @@ func main() {
 		port = "8080"
 	}
 
+	fmt.Println("Servidor rodando na porta:", port)
 	log.Fatal(app.Listen("0.0.0.0:" + port))
 }
